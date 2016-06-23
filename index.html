@@ -1,0 +1,97 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="jQuery plugin: Multi Steps Dependent Quiz demonstration">
+<meta name="keywords" content="HTML,CSS,jQuery,JavaScript">
+<meta name="author" content="Rakesh Kumar Shardiwal">
+<title>jQuery plugin: Multi Steps Dependent Quiz demonstration</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<style type="text/css">
+body{ font-size: 14px; padding: 10px; }
+body .q_container{ margin-bottom: 10px; }
+body .q_container .qu {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+body .q_container .options label{
+    cursor: pointer;
+}
+body .q_container .options input{
+    margin-right: 5px;
+    vertical-align: text-bottom;
+}
+body textarea{
+    width: 100%;
+}
+</style>
+</head>
+<body>
+
+<h1>jQuery plugin: Multi Steps Dependent Quiz</h1>
+<p>This jQuery plugin creates multi steps dependent quiz based on answers.</p>
+
+<p class="intro">We will ask a few questions to ensure your test.</p>
+
+<div class="progress">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<form id="insuranceclaimform" method="post" enctype="multipart/form-data" name="test">
+<div id="wizard_questions" data-quiz="" class="hello">
+</div>
+<div class="q_container" id="final_step" style="display:none;">
+    <div class="qu">You have told us</div>
+    <div class="options">
+        <div class="opt"><textarea rows="10" cols="50" name="final_step" readonly="true"></textarea></div>
+    </div>
+</div>
+<button class="action back btn btn-kingprice">Back</button>
+<button class="action next btn btn-kingprice">Next</button>
+<button class="action submit btn btn-kingprice">Finish & Submit</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="multistepsquiz.js"></script>
+<script type="text/javascript">
+var json_data = '[{"options":[{"code":"Q1OP1","steps":4,"text":"My issue requires immediate onsite assistance","child":["Q2"]},{"child":["Q3"],"text":"No I do not require immediate assistance","code":"Q1OP2","steps":4}],"type":"radio","question":"Is this an emergency?","required":"true","question_code":"Q1"},{"options":[{"text":"I have a water issue!","steps":4,"code":"Q2OP1","child":["Q4","Q5","Q14-jobcode"]},{"child":["Q4","Q5","Q15-jobcode"],"text":"I have a power issue!","steps":4,"code":"Q2OP2"},{"text":"I have a glass issue!","steps":4,"code":"Q2OP3","child":["Q4","Q5","Q16-jobcode"]},{"child":["Q4","Q5","Q17-jobcode"],"steps":4,"code":"Q2OP4","text":"I have a security issue!"},{"child":["Q4","Q5","Q18-jobcode"],"text":"I have a lift issue!","code":"Q2OP5","steps":4}],"type":"radio","question_code":"Q2","required":"true","question":"Ok, who should we send to assist you"},{"required":"true","question_code":"Q3","question":"Ok, what is the repair status?","options":[{"text":"The repairs have been completed and I have invoices and receipts","steps":4,"code":"Q3OP1","child":["Q4","Q7","Q8","Q9","Q10","Q11","Q19-jobcode"]},{"child":["Q12"],"code":"Q3OP2","steps":6,"text":"I need the repairs to be done and I need your help to arrange trades people"}],"type":"radio"},{"options":[],"type":"text","question":"Ok, give us a description of the issue","question_code":"Q4"},{"question_code":"Q5","question":"Attach some photos of the issue","options":[],"type":"file"},{"options":[],"type":"text","question_code":"Q6","question":"Ok, give us a description of the issue"},{"type":"file","options":[],"question_code":"Q7","question":"Attach some photos of the damage"},{"type":"file","options":[],"question":"Attach some photos of the repairs","question_code":"Q8"},{"question_code":"Q9","question":"Attach an issue of summary","type":"file","options":[]},{"options":[],"type":"file","question_code":"Q10","question":"Attach the repairs quotation"},{"type":"file","options":[],"question_code":"Q11","question":"Attach the payment reciepts"},{"type":"radio","options":[{"text":"I have water leaking through the ceiling or the walls","steps":6,"code":"Q12OP1","child":["Q13","Q20-jobcode"]},{"child":["Q13","Q22-jobcode"],"code":"Q12OP2","steps":6,"text":"I have a flood of water in an outdoor area or coming from a sink, drain, toilet or the floor."},{"child":["Q13","Q21-jobcode"],"steps":6,"code":"Q12OP3","text":"I don\'t have a water issue"}],"question":"Ok, do we think a Geyser is involved?","required":"true","question_code":"Q12"},{"required":"true","question_code":"Q13","question":"Ouch, ok so how bad is the damage?","options":[{"child":["Q4","Q5"],"steps":6,"code":"Q13OP1","text":"There is no damage to the building other than the issue itself"},{"steps":6,"code":"Q13OP2","text":"The building damage is constrained to the area just around the issue","child":["Q4","Q5"]},{"child":["Q4","Q5","Q21-jobcode"],"text":"The building damage is significant and runs across multiple units or floors","steps":6,"code":"Q13OP3"},{"child":["Q4","Q5","Q21-jobcode"],"steps":6,"code":"Q13OP4","text":"The building damage is extensive and effects more than half the building"},{"child":["Q4","Q5","Q21-jobcode"],"text":"Mother nature caused the issue, such as a storm, flood or earthquake","code":"Q13OP5","steps":6}],"type":"radio"},{"question_code":"Q14-jobcode","options":[],"type":"hidden","value":"Emergency Water"},{"options":[],"type":"hidden","value":"Emergency Power","question_code":"Q15-jobcode"},{"options":[],"type":"hidden","value":"Emergency Glass","question_code":"Q16-jobcode"},{"options":[],"type":"hidden","value":"Emergency Security","question_code":"Q17-jobcode"},{"options":[],"type":"hidden","value":"Emergency Lift","question_code":"Q18-jobcode"},{"value":"Completed Repair","type":"hidden","options":[],"question_code":"Q19-jobcode"},{"question_code":"Q20-jobcode","options":[],"type":"hidden","value":"Geyser Issue"},{"question_code":"Q21-jobcode","value":"Repair Evaluation","type":"hidden","options":[]},{"question_code":"Q22-jobcode","options":[],"type":"hidden","value":"Plumbing Issue"}]';
+
+$('#wizard_questions').multiStepQuiz({
+    'quiz_data' : json_data,
+    'question_conatiner': 'q_container',
+    'option_container': 'options',
+    'option_class': 'opt',
+    'question_class': 'qu',
+    'option_input_class': 'input',
+    'steps_limit': 6,
+    'current_step': 1,
+    'btnnext': $(".next"),
+    'btnback': $(".back"), 
+    'btnsubmit': $(".submit"),
+    'progressbar': $(".progress-bar"),
+    'nextCallback' : function( current_step, steps_limit, response, jobcode ) {
+        if(current_step > 1){
+            $('p.intro').hide();
+        }
+        if ( current_step == steps_limit ) {
+            var data_as_string = response.join('\n');
+            $('textarea[name="final_step"]').val( data_as_string );
+            $('#final_step').show();
+            console.log( jobcode );
+        }
+    },
+    'backCallback' : function( current_step, steps_limit, response, jobcode ) {
+        if(current_step < 2){
+            $('p.intro').show();
+        }
+    },
+    'submitCallback' : function( event, current_step, steps_limit, response, jobcode ) {
+        event.preventDefault();
+        alert('Thank you.');
+    }
+});
+</script>
+
+</body>
+</html>
