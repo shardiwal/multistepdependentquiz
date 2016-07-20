@@ -36,7 +36,7 @@ $('#wizard_questions').multiStepQuiz({
     'btnback': $(".back"), 
     'btnsubmit': $(".submit"),
     'progressbar': $(".progress-bar"),
-    'nextCallback' : function( current_step, steps_limit, response, jobcode ) {
+    'nextCallback' : function( sequence, current_step, steps_limit, response, jobcode ) {
         if(current_step > 1){
             $('p.intro').hide();
         }
@@ -47,7 +47,7 @@ $('#wizard_questions').multiStepQuiz({
             console.log( jobcode );
         }
     },
-    'backCallback' : function( current_step, steps_limit, response, jobcode ) {
+    'backCallback' : function( sequence, current_step, steps_limit, response, jobcode ) {
         if(current_step < 2){
             $('p.intro').show();
         }
@@ -70,7 +70,8 @@ JSON snippet
         "code":"Q1OP1",
         "steps":4,
         "text":"My issue requires immediate onsite assistance",
-        "child":["Q2"]
+        "child":["Q2"],
+        "class" : "optional"
       },
       {
         "code":"Q1OP2",  // Option Code

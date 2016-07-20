@@ -90,46 +90,167 @@
             var $option  = $('<div/>',{ 'class':settings.option_container });
             $.each(e.options, function(i,op){
                 var child_ids = op.child ? op.child.join(',') : '';
+                if ( !op.class ) { op.class = ''; }
                 $('<div/>', { 'class':settings.option_class} ).append(
                     $('<label/>').html( op.text ).prepend(
                         $('<input/>',{
                             'name': name_attr,
+                            'type': 'radio',
+                            'class': settings.option_input_class + ' ' + op.class,
+                            'data-code' : op.code,
+                            'data-child': child_ids,
+                            'value': op.text,
+                            'data-steps': op.steps,
+                            'click': function(){
+                                $(this).closest('.'+settings.question_conatiner).removeClass('missing');
+                            }
+                        })
+                    )
+                )
+                .append( $('<div/>', { 'class':'option_info'} ).html( op.info ) )
+                .appendTo($option);
+            });
+            $container.append( $option );
+        };
+
+        selectTypeField = function(e, name_attr, $container) {
+            var $option = $('<div/>',{ 'class':settings.option_container });
+            var $select = $('<select/>', {
+                'class':settings.option_class,
+                'name': name_attr,
+                'change': function(){
+                    $(this).closest('.'+settings.question_conatiner).removeClass('missing');
+                }
+            } );
+            $.each(e.options, function(i,op){
+                var child_ids = op.child ? op.child.join(',') : '';
+                $select.append(
+                        $('<option/>',{
                             'type': 'radio',
                             'class': settings.option_input_class,
                             'data-code' : op.code,
                             'data-child': child_ids,
                             'value': op.text,
                             'data-steps': op.steps
-                        })
-                    )
-                ).appendTo($option);
+                        }).html(op.text)
+                )
             });
+            $select
+            .appendTo($option);
             $container.append( $option );
         };
 
         fileTypeField = function(e, name_attr, $container) {
             var $option  = $('<div/>',{ 'class':settings.option_container });
+            if ( !e.class ) { e.class = ''; }
             $('<div/>', { 'class':settings.option_class} ).append(
                 $('<input/>',{
                     'type': 'file',
                     'name': name_attr,
-                    'class': settings.option_input_class,
+                    'class': settings.option_input_class + ' ' + e.class,
                     'data-code' : e.question_code
                 } )
-            ).appendTo($option);
+            )
+            .append( $('<div/>', { 'class':'option_info'} ).html( e.info ) )
+            .appendTo($option);
             $container.append( $option );
         };
 
         textTypeField = function(e, name_attr, $container) {
             var $option  = $('<div/>',{ 'class':settings.option_container });
+            var child_ids = e.child ? e.child.join(',') : '';
+            if ( !e.class ) { e.class = ''; }
+            var attr = {
+                'type': 'text',
+                'size': '50',
+                'name': name_attr,
+                'data-child': child_ids,
+                'class': settings.option_input_class + ' ' + e.class,
+                'data-code' : e.question_code,
+                'change': function(){
+                    $(this).closest('.'+settings.question_conatiner).removeClass('missing');
+                }
+            };
+            if ( e.min ) {
+                attr['min'] = e.min;
+            }
+            if ( e.max ) {
+                attr['max'] = e.max;
+            }
+            if ( e.placeholder ) {
+                attr['placeholder'] = e.placeholder;
+            }
+            if ( e.pattern ) {
+                attr['pattern'] = e.pattern;
+            }
+
             $('<div/>', { 'class':settings.option_class} ).append(
-                $('<textarea/>',{
-                    'rows': '2',
-                    'cols': '50',
-                    'name': name_attr,
-                    'class': settings.option_input_class,
-                    'data-code' : e.question_code
-                } )
+                $('<input/>', attr )
+            ).appendTo($option);
+            $container.append( $option );
+        };
+
+        textareaTypeField = function(e, name_attr, $container) {
+            var $option  = $('<div/>',{ 'class':settings.option_container });
+            var child_ids = e.child ? e.child.join(',') : '';
+            if ( !e.class ) { e.class = ''; }
+            var attr = {
+                'rows': '2',
+                'cols': '50',
+                'name': name_attr,
+                'data-child': child_ids,
+                'class': settings.option_input_class + ' ' + e.class,
+                'data-code' : e.question_code,
+                'placeholder' : e.placeholder,
+                'pattern' : e.pattern,
+                'change': function(){
+                    $(this).closest('.'+settings.question_conatiner).removeClass('missing');
+                }
+            };
+            if ( e.min ) {
+                attr['min'] = e.min;
+            }
+            if ( e.max ) {
+                attr['max'] = e.max;
+            }
+            if ( e.placeholder ) {
+                attr['placeholder'] = e.placeholder;
+            }
+            if ( e.pattern ) {
+                attr['pattern'] = e.pattern;
+            }
+            $('<div/>', { 'class':settings.option_class} ).append(
+                $('<textarea/>', attr )
+            ).appendTo($option);
+            $container.append( $option );
+        };
+
+        dateTypeField = function(e, name_attr, $container) {
+            var $option  = $('<div/>',{ 'class':settings.option_container });
+            if ( !e.class ) { e.class = ''; }
+            var attr = {
+                'type': 'text',
+                'name': name_attr,
+                'class': settings.option_input_class + ' dateinput'+ ' ' + e.class,
+                'data-code' : e.question_code,
+                'change': function(){
+                    $(this).closest('.'+settings.question_conatiner).removeClass('missing');
+                }
+            };
+            if ( e.min ) {
+                attr['min'] = e.min;
+            }
+            if ( e.max ) {
+                attr['max'] = e.max;
+            }
+            if ( e.placeholder ) {
+                attr['placeholder'] = e.placeholder;
+            }
+            if ( e.pattern ) {
+                attr['pattern'] = e.pattern;
+            }
+            $('<div/>', { 'class':settings.option_class} ).append(
+                $('<input/>', attr )
             ).appendTo($option);
             $container.append( $option );
         };
@@ -141,7 +262,7 @@
                     'type': 'hidden',
                     'value': e.value,
                     'name': name_attr,
-                    'class': settings.option_input_class,
+                    'class': settings.option_input_class
                 } )
             ).appendTo($option);
             $container.append( $option );
@@ -152,7 +273,10 @@
 
             $.each(op.child, function(i,e){
                 var que       = getQuestion(e);
-                var name_attr = op.code + que.question_code;
+                if ( !op.code ) {
+                    op.code = '';
+                }
+                var name_attr = que.question_code + '|' + op.code + que.question_code;
                 var $question_container = $('<div/>',{ 'id': op.code + que.question_code, 'class':settings.question_conatiner, 'data-code':que.question_code });
 
                 if ( que.question ) {
@@ -165,8 +289,14 @@
                 if ( que.type == 'radio' ) {
                     radioTypeField(que, name_attr, $question_container);
                 }
+                if ( que.type == 'select' ) {
+                    selectTypeField(que, name_attr, $question_container);
+                }
                 if ( que.type == 'text' ) {
                     textTypeField(que, name_attr, $question_container);
+                }
+                if ( que.type == 'textarea' ) {
+                    textareaTypeField(que, name_attr, $question_container);
                 }
                 if ( que.type == 'file' ) {
                     fileTypeField(que, name_attr, $question_container);
@@ -174,10 +304,13 @@
                 if ( que.type == 'hidden' ) {
                     hiddenTypeField(que, name_attr, $question_container);
                 }
-                
+                if ( que.type == 'date' ) {
+                    dateTypeField(que, name_attr, $question_container);
+                }
                 $container.append( $question_container );
             });
 
+            $('.'+settings.question_conatiner + ' .dateinput').datepicker();
         };
 
         // Change progress bar action
@@ -201,12 +334,36 @@
             var jobcode = '';
             $.each( response, function(i,d) {
                 $.each( d, function(i,dd ) {
-                    if ( !dd.name.match(/jobcode$/) ) {
-                        submited_response.push( dd.value );
+
+                    var rpv = dd.value;
+                    if ( rpv.length > 0 ) {
+
+                        var RP = rpv.split('|');
+                        if ( RP.length > 1 ) {
+                            rpv = RP[1];
+                        }
+                        else {
+                            rpv = RP[0];
+                        }
+
+                        var Q = dd.name.split('|');
+                        var QCOD = Q[0];
+
+                        var ques = getQuestion(QCOD);
+
+                        if ( ques ) {
+                            if ( ques.type == 'text' || ques.type == 'textarea' || ques.type == 'select' || ques.type == 'date' || ques.type == 'radio') {
+                                rpv = ques.question + ': ' + rpv;
+                            }
+                        }
+
+                        if ( QCOD.match(/^file_/) ) {
+                            rpv = 'Attachment: ' + rpv;
+                        }
+
+                        submited_response.push( rpv );
                     }
-                    else {
-                        jobcode = dd.value;
-                    }
+
                 });
             } );
             return Array(submited_response, jobcode);
@@ -241,6 +398,12 @@
                 $.each(e.options, function(i,o){
                     drawChilds(o, $t);
                 });
+                if ( e.type == 'text' ){
+                   drawChilds(e, $t); 
+                }
+                if ( e.type == 'textarea' ){
+                   drawChilds(e, $t);
+                }
             });
 
             hideButtons(settings.current_step);
@@ -258,20 +421,130 @@
                 var steps_limit  = settings.steps_limit;
 
                 if(current_step < steps_limit){
+                    var childs = Array();
+                    // First radio question
                     var $selected_radio = $('.'+ settings.question_conatiner +':visible input[type=radio]:checked');
 
-                    if ( $('.'+ settings.question_conatiner +':visible input[type=radio]').length ) {
-                        if ( !$selected_radio.length ){
-                            alert( 'Please select your choice' );
-                            return;
-                        }
+                    var invalid = 0;
+                    /* Validate Radio */
+                    var all_radio_groups = {};
+                    var $radio = $('.'+ settings.question_conatiner +':visible input[type=radio]');
+                    if ( $radio.length ) {
+                        $.each( $radio, function(i,e){
+                            var name = $(e).attr('name');
+                            all_radio_groups[name] = 1;
+                        } );
                     }
+                    $.each( all_radio_groups, function(k,v){
+                        if ( invalid ) {
+                            return true;
+                        }
+                        var $s_radio = $('.'+ settings.question_conatiner +':visible input[name="'+ k +'"]');
+                        if ( $s_radio.hasClass('optional') ) {
+                            return true;
+                        }
+                        if ( ! $s_radio.is(':checked') ) {
+                            invalid = 1;
+                            alert( 'Please select your choice' );
+                            $s_radio.focus();
+                            $s_radio.closest('.'+settings.question_conatiner).addClass('missing');
+                        }
+                    } );
+
+                    /* Validate Dropdown */
+                    var $select = $('.'+ settings.question_conatiner +':visible select');
+                    $.each( $select, function(i,e) {
+                        if ( invalid ) {
+                            return true;
+                        }
+                        if ( $(e).hasClass('optional') ) {
+                            return true;
+                        }
+                        if ( $(e).val() == "" ) {
+                            invalid = 1;
+                            alert( 'Please select your dropdown choice' );
+                            $(e).focus();
+                            $(e).closest('.'+settings.question_conatiner).addClass('missing');
+                        }
+                    } );
+
+                    /* Validate textbox */
+                    var $text = $('.'+ settings.question_conatiner +':visible input[type=text]');
+                    $.each( $text, function(i,e) {
+                        if ( invalid ) {
+                            return true;
+                        }
+                        if ( $(e).hasClass('optional') ) {
+                            return true;
+                        }
+                        if ( $(e).val() == "" ) {
+                            invalid = 1;
+                            alert( 'Please enter your value' );
+                        }
+                        if ( $(e).hasClass('email') ) {
+                            if ( !invalid ) {
+                                var val = $(e).val();
+                                var filter = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                                if ( ! filter.test(val) ) {
+                                    invalid = 1;
+                                    alert( 'Invalid email address' );
+                                }
+                            }
+                        }
+                        if ( invalid ) {
+                            $(e).focus();
+                            $(e).closest('.'+settings.question_conatiner).addClass('missing');
+                        }
+                    } );
+
+                    /* Validate textarea */
+                    var $textarea = $('.'+ settings.question_conatiner +':visible textarea');
+                    $.each( $textarea, function(i,e) {
+                        if ( invalid ) {
+                            return true;
+                        }
+                        if ( $(e).hasClass('optional') ) {
+                            return true;
+                        }
+                        if ( $(e).val() == "" ) {
+                            invalid = 1;
+                            alert( 'Please enter your value' );
+                            $(e).focus();
+                            $(e).closest('.'+settings.question_conatiner).addClass('missing');
+                        }
+                    } );
+
+                    if ( invalid ){ return; }
 
                     response[current_step] = Array();
-                    response[current_step] = $t.find('.'+ settings.question_conatiner +':visible input, .'+ settings.question_conatiner +':visible textarea').serializeArray();
+                    response[current_step] = $t.find(
+                        '.'
+                        + settings.question_conatiner 
+                        +':visible input, .'
+                        + settings.question_conatiner +':visible textarea, .'
+                        + settings.question_conatiner +':visible select'
+                    ).serializeArray();
 
-                    var childs = $selected_radio.data('child');
+                    $('.q_container:visible .ajax-file-upload-filename').each( function(i,e){
+                        response[current_step].push( {
+                            name : 'file_'+i,
+                            value : $(e).attr('file'),
+                            'orig-name': $(e).attr('orig-file')
+                        } );
+                    } );
+
+                    childs = $selected_radio.data('child');
                     var opcode = $selected_radio.data('code');
+
+                    if ( $('.'+ settings.question_conatiner +':visible textarea, ' + '.'+ settings.question_conatiner +':visible text').length ) {
+                        if( !childs ) { childs = Array(); }
+                        $.each( $('.'+ settings.question_conatiner +':visible textarea, ' + '.'+ settings.question_conatiner +':visible textarea'), function(i,el){
+                            childs.push( $(el).data('child') );
+                        });
+                        childs = childs.join(',');
+                        opcode = '';
+                    }
+
                     var steps  = $selected_radio.data('steps');
                     if ( steps ) {
                         settings.steps_limit = steps;
@@ -282,6 +555,9 @@
                     settings.current_step = current_step;
 
                     if ( childs ) {
+                        if ( !opcode ) {
+                            opcode = '';
+                        }
                         sequence[current_step] = Array();
                         $.each( childs.split(','), function(i,e){
                             currentQ = '#'+opcode+e;
@@ -296,7 +572,7 @@
                     if ( typeof(settings.nextCallback) == 'function' ) {
                         var sumres = submittedResponse();
                         settings.nextCallback(
-                            settings.current_step, settings.steps_limit, sumres[0], sumres[1]
+                            sequence, settings.current_step, settings.steps_limit, sumres[0], sumres[1]
                         );
                     }
                 }
@@ -316,7 +592,9 @@
 
                     shown_ids = Array();
                     $.each( sequence[current_step], function(i,ve){
-                        shown_ids.push( ve );
+                        if ( ve.length > 1 ) {
+                            shown_ids.push( ve );
+                        }
                     });
                     shown_ids_as_string = shown_ids.join(',');
 
@@ -331,7 +609,7 @@
                 if ( typeof(settings.backCallback) == 'function' ) {
                     var sumres = submittedResponse();
                     settings.backCallback(
-                        settings.current_step, settings.steps_limit, sumres[0], sumres[1]
+                        sequence, settings.current_step, settings.steps_limit, sumres[0], sumres[1]
                     );
                 }
             });
@@ -340,6 +618,13 @@
             settings.btnsubmit.click(function(e){
                 if ( typeof(settings.submitCallback) == 'function' ) {
                     var sumres = submittedResponse();
+
+                    response['last'] = Array();
+                    response['last'].push( {
+                        name : 'you_told_us',
+                        value : sumres[0].join('\n')
+                    } );
+
                     settings.submitCallback(
                         e, settings.current_step, settings.steps_limit, sumres[0], sumres[1]
                     );

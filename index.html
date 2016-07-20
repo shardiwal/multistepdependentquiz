@@ -38,11 +38,11 @@ body textarea{
 </div>
 <form id="insuranceclaimform" method="post" enctype="multipart/form-data" name="test">
 <div id="wizard_questions" data-quiz="" class="hello">
-</div>
-<div class="q_container" id="final_step" style="display:none;">
-    <div class="qu">You have told us</div>
-    <div class="options">
-        <div class="opt"><textarea rows="10" cols="50" name="final_step" readonly="true"></textarea></div>
+    <div class="q_container" id="final_step" style="display:none;">
+        <div class="qu">You have told us</div>
+        <div class="options">
+            <div class="opt"><textarea rows="10" cols="50" name="final_step" readonly="true"></textarea></div>
+        </div>
     </div>
 </div>
 <button class="action back btn btn-kingprice">Back</button>
@@ -52,6 +52,9 @@ body textarea{
 
 <script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 
 <script type="text/javascript" src="multistepsquiz.js"></script>
 <script type="text/javascript">
@@ -64,13 +67,13 @@ $('#wizard_questions').multiStepQuiz({
     'option_class': 'opt',
     'question_class': 'qu',
     'option_input_class': 'input',
-    'steps_limit': 6,
+    'steps_limit': 5,
     'current_step': 1,
     'btnnext': $(".next"),
     'btnback': $(".back"), 
     'btnsubmit': $(".submit"),
     'progressbar': $(".progress-bar"),
-    'nextCallback' : function( current_step, steps_limit, response, jobcode ) {
+    'nextCallback' : function( sequence, current_step, steps_limit, response, jobcode ) {
         if(current_step > 1){
             $('p.intro').hide();
         }
@@ -78,10 +81,9 @@ $('#wizard_questions').multiStepQuiz({
             var data_as_string = response.join('\n');
             $('textarea[name="final_step"]').val( data_as_string );
             $('#final_step').show();
-            console.log( jobcode );
         }
     },
-    'backCallback' : function( current_step, steps_limit, response, jobcode ) {
+    'backCallback' : function( sequence, current_step, steps_limit, response, jobcode ) {
         if(current_step < 2){
             $('p.intro').show();
         }
